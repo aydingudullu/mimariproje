@@ -1,0 +1,2 @@
+# mimariproje
+Mimariproje webservisleri
