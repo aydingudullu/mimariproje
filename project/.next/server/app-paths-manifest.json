@@ -1,5 +1,5 @@
 {
-  "/projeler/yeni/page": "app/projeler/yeni/page.js",
-  "/api/projects/route": "app/api/projects/route.js",
-  "/projeler/page": "app/projeler/page.js"
+  "/profil/me/page": "app/profil/me/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/admin/page": "app/admin/page.js"
 }
