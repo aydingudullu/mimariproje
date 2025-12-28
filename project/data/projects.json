@@ -1,0 +1,70 @@
+[
+  {
+    "id": "proj_1755950672407_boacrec9m",
+    "title": "test",
+    "description": "test",
+    "category": "residential",
+    "price": 343,
+    "location": "Ankara, Türkiye",
+    "area": 33,
+    "style": "modern",
+    "specializations": [
+      "Konut"
+    ],
+    "images": [],
+    "created_at": "2025-08-23T12:04:32.407Z",
+    "updated_at": "2025-08-23T12:04:32.408Z",
+    "user": {
+      "id": 1,
+      "email": "demo@mimariproje.com",
+      "first_name": "Demo",
+      "last_name": "Kullanıcı",
+      "company_name": "Demo Mimarlık",
+      "user_type": "company",
+      "profession": "Mimar",
+      "phone": "+905551234567",
+      "location": "İstanbul",
+      "bio": "Demo kullanıcı",
+      "avatar_url": "",
+      "profile_image_url": "",
+      "is_verified": true,
+      "subscription_type": "premium",
+      "created_at": "2025-08-23T12:04:32.408Z",
+      "full_name": "Demo Kullanıcı"
+    }
+  },
+  {
+    "id": "proj_1755950550672_rx6fqkqbn",
+    "title": "test",
+    "description": "test",
+    "category": "residential",
+    "price": 44,
+    "location": "Ankara, Türkiye",
+    "area": 44,
+    "style": "minimalist",
+    "specializations": [
+      "Konut"
+    ],
+    "images": [],
+    "created_at": "2025-08-23T12:02:30.672Z",
+    "updated_at": "2025-08-23T12:02:30.672Z",
+    "user": {
+      "id": 1,
+      "email": "demo@mimariproje.com",
+      "first_name": "Demo",
+      "last_name": "Kullanıcı",
+      "company_name": "Demo Mimarlık",
+      "user_type": "company",
+      "profession": "Mimar",
+      "phone": "+905551234567",
+      "location": "İstanbul",
+      "bio": "Demo kullanıcı",
+      "avatar_url": "",
+      "profile_image_url": "",
+      "is_verified": true,
+      "subscription_type": "premium",
+      "created_at": "2025-08-23T12:02:30.672Z",
+      "full_name": "Demo Kullanıcı"
+    }
+  }
+]

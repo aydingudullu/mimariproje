@@ -1,0 +1,366 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model admin_logs {
+  id            Int         @id @default(autoincrement())
+  admin_user_id Int
+  action        String      @db.VarChar(100)
+  resource_type String      @db.VarChar(50)
+  resource_id   Int?
+  description   String?
+  old_values    String?
+  new_values    String?
+  ip_address    String?     @db.VarChar(45)
+  user_agent    String?
+  created_at    DateTime    @db.Timestamp(6)
+  admin_users   admin_users @relation(fields: [admin_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model admin_users {
+  id                                                      Int               @id @default(autoincrement())
+  user_id                                                 Int               @unique
+  role                                                    adminrole
+  is_active                                               Boolean
+  permissions                                             String?
+  created_by                                              Int?
+  created_at                                              DateTime          @db.Timestamp(6)
+  last_login                                              DateTime?         @db.Timestamp(6)
+  login_count                                             Int
+  admin_logs                                              admin_logs[]
+  admin_users                                             admin_users?      @relation("admin_usersToadmin_users", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_admin_users                                       admin_users[]     @relation("admin_usersToadmin_users")
+  users                                                   users             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  system_settings_system_settings_created_byToadmin_users system_settings[] @relation("system_settings_created_byToadmin_users")
+  system_settings_system_settings_updated_byToadmin_users system_settings[] @relation("system_settings_updated_byToadmin_users")
+}
+
+model conversations {
+  id                                  Int        @id @default(autoincrement())
+  user1_id                            Int
+  user2_id                            Int
+  last_message_at                     DateTime?  @default(now()) @db.Timestamp(6)
+  created_at                          DateTime?  @default(now()) @db.Timestamp(6)
+  users_conversations_user1_idTousers users      @relation("conversations_user1_idTousers", fields: [user1_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_conversations_user2_idTousers users      @relation("conversations_user2_idTousers", fields: [user2_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  messages                            messages[]
+
+  @@unique([user1_id, user2_id])
+}
+
+model invoices {
+  id              Int            @id @default(autoincrement())
+  user_id         Int
+  payment_id      Int?
+  subscription_id Int?
+  invoice_number  String         @unique @db.VarChar(50)
+  invoice_date    DateTime?      @db.Timestamp(6)
+  due_date        DateTime?      @db.Timestamp(6)
+  subtotal        Decimal        @db.Decimal(10, 2)
+  tax_amount      Decimal?       @db.Decimal(10, 2)
+  total_amount    Decimal        @db.Decimal(10, 2)
+  currency        String         @db.VarChar(3)
+  status          String?        @db.VarChar(50)
+  billing_name    String         @db.VarChar(200)
+  billing_email   String         @db.VarChar(120)
+  billing_address String?
+  billing_city    String?        @db.VarChar(100)
+  billing_country String?        @db.VarChar(100)
+  tax_number      String?        @db.VarChar(50)
+  pdf_url         String?        @db.VarChar(500)
+  created_at      DateTime?      @db.Timestamp(6)
+  updated_at      DateTime?      @db.Timestamp(6)
+  sent_at         DateTime?      @db.Timestamp(6)
+  paid_at         DateTime?      @db.Timestamp(6)
+  payments        payments?      @relation(fields: [payment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subscriptions   subscriptions? @relation(fields: [subscription_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users           users          @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model job_applications {
+  id           Int       @id @default(autoincrement())
+  job_id       Int
+  applicant_id Int
+  cover_letter String?
+  cv_url       String?   @db.VarChar(500)
+  status       String?   @default("pending") @db.VarChar(50)
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  updated_at   DateTime? @default(now()) @db.Timestamp(6)
+  users        users     @relation(fields: [applicant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  jobs         jobs      @relation(fields: [job_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([job_id, applicant_id])
+}
+
+model jobs {
+  id                 Int                @id @default(autoincrement())
+  title              String             @db.VarChar(200)
+  description        String
+  requirements       String?
+  job_type           String             @db.VarChar(50)
+  location           String?            @db.VarChar(100)
+  remote_allowed     Boolean?           @default(false)
+  salary_min         Decimal?           @db.Decimal(10, 2)
+  salary_max         Decimal?           @db.Decimal(10, 2)
+  salary_currency    String?            @default("TRY") @db.VarChar(10)
+  experience_level   String?            @db.VarChar(50)
+  category           String             @db.VarChar(100)
+  status             String?            @default("active") @db.VarChar(50)
+  featured           Boolean?           @default(false)
+  views              Int?               @default(0)
+  applications_count Int?               @default(0)
+  employer_id        Int
+  created_at         DateTime?          @default(now()) @db.Timestamp(6)
+  updated_at         DateTime?          @default(now()) @db.Timestamp(6)
+  expires_at         DateTime?          @db.Timestamp(6)
+  job_applications   job_applications[]
+  users              users              @relation(fields: [employer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  notifications      notifications[]
+  payments           payments[]
+
+  @@index([category], map: "idx_jobs_category")
+  @@index([employer_id], map: "idx_jobs_employer_id")
+  @@index([status], map: "idx_jobs_status")
+}
+
+model messages {
+  id              Int             @id @default(autoincrement())
+  conversation_id Int
+  sender_id       Int
+  content         String
+  message_type    String?         @default("text") @db.VarChar(50)
+  file_url        String?         @db.VarChar(500)
+  is_read         Boolean?        @default(false)
+  created_at      DateTime?       @default(now()) @db.Timestamp(6)
+  read_at         DateTime?       @db.Timestamp(6)
+  conversations   conversations   @relation(fields: [conversation_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users           users           @relation(fields: [sender_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  notifications   notifications[]
+
+  @@index([conversation_id], map: "idx_messages_conversation_id")
+  @@index([sender_id], map: "idx_messages_sender_id")
+}
+
+model notification_preferences {
+  id                   Int       @id @default(autoincrement())
+  user_id              Int       @unique
+  email_notifications  String?
+  push_notifications   String?
+  in_app_notifications String?
+  email_enabled        Boolean?
+  push_enabled         Boolean?
+  in_app_enabled       Boolean?
+  quiet_hours_enabled  Boolean?
+  quiet_hours_start    DateTime? @db.Time(6)
+  quiet_hours_end      DateTime? @db.Time(6)
+  created_at           DateTime? @db.Timestamp(6)
+  updated_at           DateTime? @db.Timestamp(6)
+  users                users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model notifications {
+  id                                         Int                   @id @default(autoincrement())
+  user_id                                    Int
+  type                                       notificationtype
+  title                                      String                @db.VarChar(200)
+  message                                    String
+  extra_data                                 String?
+  priority                                   notificationpriority?
+  is_read                                    Boolean
+  is_sent                                    Boolean
+  action_url                                 String?               @db.VarChar(500)
+  action_text                                String?               @db.VarChar(100)
+  created_at                                 DateTime              @db.Timestamp(6)
+  read_at                                    DateTime?             @db.Timestamp(6)
+  expires_at                                 DateTime?             @db.Timestamp(6)
+  related_project_id                         Int?
+  related_job_id                             Int?
+  related_message_id                         Int?
+  related_user_id                            Int?
+  jobs                                       jobs?                 @relation(fields: [related_job_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  messages                                   messages?             @relation(fields: [related_message_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  projects                                   projects?             @relation(fields: [related_project_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_notifications_related_user_idTousers users?                @relation("notifications_related_user_idTousers", fields: [related_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_notifications_user_idTousers         users                 @relation("notifications_user_idTousers", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model payments {
+  id                     Int        @id @default(autoincrement())
+  user_id                Int
+  project_id             Int?
+  job_id                 Int?
+  amount                 Decimal    @db.Decimal(10, 2)
+  currency               String     @db.VarChar(3)
+  payment_type           String     @db.VarChar(50)
+  iyzico_payment_id      String?    @db.VarChar(100)
+  iyzico_conversation_id String?    @db.VarChar(100)
+  iyzico_token           String?    @db.VarChar(200)
+  status                 String?    @db.VarChar(50)
+  payment_method         String?    @db.VarChar(50)
+  invoice_number         String?    @db.VarChar(50)
+  invoice_url            String?    @db.VarChar(500)
+  description            String?
+  extra_data             String?
+  created_at             DateTime?  @db.Timestamp(6)
+  updated_at             DateTime?  @db.Timestamp(6)
+  paid_at                DateTime?  @db.Timestamp(6)
+  refunded_at            DateTime?  @db.Timestamp(6)
+  invoices               invoices[]
+  jobs                   jobs?      @relation(fields: [job_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  projects               projects?  @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users                  users      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model project_images {
+  id         Int      @id @default(autoincrement())
+  project_id Int
+  image_url  String   @db.VarChar(500)
+  alt_text   String?  @db.VarChar(200)
+  is_primary Boolean? @default(false)
+  order      Int?     @default(0)
+  projects   projects @relation(fields: [project_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model projects {
+  id             Int              @id @default(autoincrement())
+  title          String           @db.VarChar(200)
+  description    String
+  category       String           @db.VarChar(100)
+  price          Decimal          @db.Decimal(10, 2)
+  location       String?          @db.VarChar(100)
+  area           String?          @db.VarChar(50)
+  style          String?          @db.VarChar(100)
+  status         String?          @default("active") @db.VarChar(50)
+  featured       Boolean?         @default(false)
+  views          Int?             @default(0)
+  likes          Int?             @default(0)
+  downloads      Int?             @default(0)
+  user_id        Int
+  created_at     DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime?        @default(now()) @db.Timestamp(6)
+  is_deleted     Boolean?         @default(false)
+  notifications  notifications[]
+  payments       payments[]
+  project_images project_images[]
+  users          users            @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([category], map: "idx_projects_category")
+  @@index([created_at], map: "idx_projects_created_at")
+  @@index([location], map: "idx_projects_location")
+  @@index([status], map: "idx_projects_status")
+  @@index([title], map: "idx_projects_title")
+  @@index([user_id], map: "idx_projects_user_id")
+}
+
+model subscriptions {
+  id                   Int        @id @default(autoincrement())
+  user_id              Int
+  plan_type            String     @db.VarChar(50)
+  status               String?    @db.VarChar(50)
+  monthly_price        Decimal    @db.Decimal(10, 2)
+  currency             String     @db.VarChar(3)
+  current_period_start DateTime   @db.Timestamp(6)
+  current_period_end   DateTime   @db.Timestamp(6)
+  next_billing_date    DateTime?  @db.Timestamp(6)
+  features             String?
+  limits               String?
+  created_at           DateTime?  @db.Timestamp(6)
+  updated_at           DateTime?  @db.Timestamp(6)
+  cancelled_at         DateTime?  @db.Timestamp(6)
+  invoices             invoices[]
+  users                users      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model system_settings {
+  id                                                  Int          @id @default(autoincrement())
+  key                                                 String       @unique @db.VarChar(100)
+  value                                               String?
+  data_type                                           String       @db.VarChar(20)
+  description                                         String?
+  category                                            String?      @db.VarChar(50)
+  is_public                                           Boolean
+  created_by                                          Int?
+  updated_by                                          Int?
+  created_at                                          DateTime     @db.Timestamp(6)
+  updated_at                                          DateTime     @db.Timestamp(6)
+  admin_users_system_settings_created_byToadmin_users admin_users? @relation("system_settings_created_byToadmin_users", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  admin_users_system_settings_updated_byToadmin_users admin_users? @relation("system_settings_updated_byToadmin_users", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id                                                 Int                       @id @default(autoincrement())
+  email                                              String                    @unique @db.VarChar(120)
+  password_hash                                      String                    @db.VarChar(255)
+  first_name                                         String?                   @db.VarChar(100)
+  last_name                                          String?                   @db.VarChar(100)
+  company_name                                       String?                   @db.VarChar(200)
+  user_type                                          String                    @db.VarChar(50)
+  profession                                         String?                   @db.VarChar(100)
+  phone                                              String?                   @db.VarChar(20)
+  location                                           String?                   @db.VarChar(100)
+  website                                            String?                   @db.VarChar(200)
+  bio                                                String?
+  avatar_url                                         String?                   @db.VarChar(500)
+  specializations                                    String?
+  experience_years                                   Int?
+  is_verified                                        Boolean?                  @default(false)
+  is_active                                          Boolean?                  @default(true)
+  subscription_type                                  String?                   @default("basic") @db.VarChar(50)
+  created_at                                         DateTime?                 @default(now()) @db.Timestamp(6)
+  updated_at                                         DateTime?                 @default(now()) @db.Timestamp(6)
+  last_login                                         DateTime?                 @db.Timestamp(6)
+  profile_image_url                                  String?                   @db.VarChar(500)
+  is_banned                                          Boolean                   @default(false)
+  ban_reason                                         String?
+  banned_at                                          DateTime?                 @db.Timestamp(6)
+  ban_expires_at                                     DateTime?                 @db.Timestamp(6)
+  admin_users                                        admin_users?
+  conversations_conversations_user1_idTousers        conversations[]           @relation("conversations_user1_idTousers")
+  conversations_conversations_user2_idTousers        conversations[]           @relation("conversations_user2_idTousers")
+  invoices                                           invoices[]
+  job_applications                                   job_applications[]
+  jobs                                               jobs[]
+  messages                                           messages[]
+  notification_preferences                           notification_preferences?
+  notifications_notifications_related_user_idTousers notifications[]           @relation("notifications_related_user_idTousers")
+  notifications_notifications_user_idTousers         notifications[]           @relation("notifications_user_idTousers")
+  payments                                           payments[]
+  projects                                           projects[]
+  subscriptions                                      subscriptions[]
+
+  @@index([email], map: "idx_users_email")
+}
+
+enum adminrole {
+  SUPER_ADMIN
+  ADMIN
+  MODERATOR
+  SUPPORT
+  ANALYST
+}
+
+enum notificationpriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum notificationtype {
+  MESSAGE
+  PROJECT_LIKE
+  PROJECT_COMMENT
+  JOB_APPLICATION
+  PAYMENT_SUCCESS
+  PAYMENT_FAILED
+  SUBSCRIPTION_EXPIRED
+  SYSTEM_ANNOUNCEMENT
+  PROJECT_APPROVED
+  PROJECT_REJECTED
+  PROFILE_VERIFIED
+}

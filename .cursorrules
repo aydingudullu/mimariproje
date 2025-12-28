@@ -1,0 +1,164 @@
+# Mimariproje.com - Cursor Rules
+
+## Proje Genel Bilgileri
+
+- **Proje Adı:** Mimariproje.com - Türk Mimarlık Pazar Yeri Platformu
+- **Teknoloji Stack:** Next.js 14 + TypeScript + Tailwind CSS + Flask + PostgreSQL
+- **Dil:** Türkçe (Kod yorumları ve kullanıcı arayüzü Türkçe olacak)
+- **Hedef Kitle:** Türkiye'deki mimarlık firmaları, serbest çalışan mimarlar ve müşteriler
+
+## Kod Yazım Kuralları
+
+### Genel Kurallar
+
+- Tüm kod yorumları Türkçe yazılacak
+- Değişken ve fonksiyon isimleri İngilizce olacak (camelCase)
+- Component isimleri PascalCase olacak
+- Dosya isimleri kebab-case olacak
+- Her dosyanın başında kısa açıklama yazılacak
+
+### Frontend (Next.js) Kuralları
+
+- TypeScript strict mode kullanılacak
+- Tailwind CSS utility-first yaklaşımı
+- Shadcn UI component'leri tercih edilecek
+- Responsive design zorunlu
+- Accessibility (a11y) standartlarına uyulacak
+- Error boundary'ler kullanılacak
+- Loading state'leri her async işlem için gerekli
+
+### Backend (Flask) Kuralları
+
+- Blueprint pattern kullanılacak
+- SQLAlchemy ORM kullanılacak
+- JWT authentication zorunlu
+- Input validation her endpoint için gerekli
+- Error handling standardize edilecek
+- Logging sistemi kullanılacak
+
+### Veritabanı Kuralları
+
+- PostgreSQL kullanılacak
+- Migration sistemi zorunlu
+- Index'ler performans için optimize edilecek
+- Foreign key constraint'ler kullanılacak
+- Soft delete pattern uygulanacak
+
+## Dosya Organizasyonu
+
+### Frontend Yapısı
+
+```
+src/
+├── app/                    # Next.js App Router
+├── components/             # Reusable components
+│   ├── ui/               # Shadcn UI components
+│   └── forms/            # Form components
+├── lib/                   # Utility functions
+├── hooks/                 # Custom React hooks
+├── types/                 # TypeScript type definitions
+└── styles/               # Global styles
+```
+
+### Backend Yapısı
+
+```
+src/
+├── models/               # Database models
+├── routes/               # API endpoints
+├── services/             # Business logic
+├── utils/                # Utility functions
+├── middleware/           # Custom middleware
+└── config/              # Configuration files
+```
+
+## Güvenlik Kuralları
+
+- Tüm user input'ları validate edilecek
+- SQL injection koruması zorunlu
+- XSS koruması implement edilecek
+- CSRF token'ları kullanılacak
+- Rate limiting uygulanacak
+- Sensitive data encryption zorunlu
+
+## Performance Kuralları
+
+- Image optimization zorunlu
+- Code splitting uygulanacak
+- Lazy loading kullanılacak
+- Caching stratejileri implement edilecek
+- Database query optimization
+
+## Testing Kuralları
+
+- Unit test coverage minimum %80
+- Integration test'ler kritik path'ler için
+- E2E test'ler user journey'ler için
+- Performance test'leri düzenli yapılacak
+
+## Git Kuralları
+
+- Feature branch workflow
+- Conventional commits kullanılacak
+- PR review zorunlu
+- Semantic versioning
+
+## Deployment Kuralları
+
+- Environment variables kullanılacak
+- Docker containerization
+- CI/CD pipeline zorunlu
+- Monitoring ve logging
+
+## Özel Gereksinimler
+
+- Çoklu dil desteği (TR/EN/CN)
+- Dark/Light theme
+- Mobile-first responsive design
+- SEO optimization
+- Accessibility compliance
+- Payment gateway integration
+- Real-time messaging
+- File upload system
+- Search ve filtering
+- Admin panel
+
+## Kod Kalitesi
+
+- ESLint kurallarına uyulacak
+- Prettier formatting zorunlu
+- TypeScript strict mode
+- No any type kullanımı
+- Proper error handling
+- Comprehensive logging
+- Clean code principles
+
+## Documentation
+
+- README dosyaları her klasör için
+- API documentation (OpenAPI/Swagger)
+- Component documentation
+- Database schema documentation
+- Deployment guide
+- User manual
+
+## Öncelik Sırası
+
+1. Core authentication sistemi
+2. Database migration (SQLite -> PostgreSQL)
+3. Basic CRUD operations
+4. File upload system
+5. Payment integration
+6. Search ve filtering
+7. Real-time messaging
+8. Admin panel
+9. Multi-language support
+10. Advanced features
+
+## Notlar
+
+- Türkçe karakter desteği tüm sistemlerde
+- Türk lirası para birimi kullanımı
+- Türkiye saat dilimi (UTC+3)
+- KVKK uyumluluğu
+- Türk vergi sistemi entegrasyonu

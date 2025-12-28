@@ -1,0 +1,7 @@
+mimariproje-complete-updated.tar.gz
+mimariproje-final-complete.tar.gz
+*.tar.gz
+*.zip
+node_modules
+.DS_Store
+.env

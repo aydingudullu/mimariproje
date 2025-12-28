@@ -1,0 +1,8 @@
+{
+  "/projeler/yeni/page": "app/projeler/yeni/page.js",
+  "/bildirimler/page": "app/bildirimler/page.js",
+  "/uzman/[id]/page": "app/uzman/[id]/page.js",
+  "/auth/giris/page": "app/auth/giris/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/auth/sifremi-unuttum/page": "app/auth/sifremi-unuttum/page.js"
+}
