@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/profil/me/page": [
+    "/projeler/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/profil/me/page.js"
+      "static/chunks/app/projeler/page.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -21,20 +21,30 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
-    "/admin/page": [
+    "/projeler/yeni/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/page.js"
+      "static/chunks/app/projeler/yeni/page.js"
     ],
-    "/admin/layout": [
+    "/proje/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/layout.js"
+      "static/chunks/app/proje/[id]/page.js"
     ],
-    "/dashboard/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/dashboard/page.js"
+      "static/chunks/app/page.js"
+    ],
+    "/firmalar/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/firmalar/page.js"
+    ],
+    "/firma/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/firma/[id]/page.js"
     ]
   }
 }
